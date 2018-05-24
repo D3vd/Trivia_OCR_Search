@@ -22,6 +22,9 @@ def Screen_grab_loco_ques(to_save):
     im.save(to_save)
     return
 
+#Since loco has a dark background and light text the performance of OCR 
+#isn't great. So by inverting the color of the screen cap OCR performes 
+#better
 def Invert_ques_loco(filename):
     image = Image.open(filename)
     inverted_image = PIL.ImageOps.invert(image)
@@ -45,7 +48,7 @@ def Screen_grab_HQ_ques(to_save):
 
 def Read_screen(filename):
 
-    #Convert the scren cap to grayscale so that OCR performamce is better
+    #Convert the screen cap to grayscale so that OCR performamce is better
     '''
     ap = argparse.ArgumentParser(description='HQ_Bot')
     ap.add_argument("-i", "--image", required=False,default=screenshot_file,help="path to input image to be OCR'd")
@@ -70,15 +73,20 @@ def Read_screen(filename):
     return text
 
 def Perform_search(query):
+	#Do Google search of the question
     url = "https://www.google.co.in/search?q=" +(query)
     webbrowser.open_new(url)
 
 def Perform_search_wolframalpha(query):
+	#Search the question on Wolframalpha 
+	#Wolframalpha is much slower than google so it's not prefered
     url = "http://www.wolframalpha.com/input/?i=" +(query)
     webbrowser.open_new(url)
 
 def Parse_question(filename):
     text = Read_screen(filename)
+	
+	#Take the raw output from tesseract and make it more search friendly
     lines = text.splitlines()
     question = ""
     options = list()
