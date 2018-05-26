@@ -22,9 +22,6 @@ def Screen_grab_loco_ques(to_save):
     im.save(to_save)
     return
 
-#Since loco has a dark background and light text the performance of OCR 
-#isn't great. So by inverting the color of the screen cap OCR performes 
-#better
 def Invert_ques_loco(filename):
     image = Image.open(filename)
     inverted_image = PIL.ImageOps.invert(image)
@@ -67,16 +64,17 @@ def Screen_grab_TheQ(to_save):
     im.save(to_save)
     return
 
-def Screen_grab_Qureka(to_save):
+def Screen_grab_Quereka(to_save):
 
     #Screen cap the left side of the desktop for Quereka
     im = Imagegrab.grab(bbox=(47,284,346,355))
     im.save(to_save)
     return
 
+
 def Read_screen(filename):
 
-    #Convert the screen cap to grayscale so that OCR performamce is better
+    #Convert the scren cap to grayscale so that OCR performamce is better
     '''
     ap = argparse.ArgumentParser(description='HQ_Bot')
     ap.add_argument("-i", "--image", required=False,default=screenshot_file,help="path to input image to be OCR'd")
@@ -101,20 +99,15 @@ def Read_screen(filename):
     return text
 
 def Perform_search(query):
-	#Do Google search of the question
     url = "https://www.google.co.in/search?q=" +(query)
     webbrowser.open_new(url)
 
 def Perform_search_wolframalpha(query):
-	#Search the question on Wolframalpha 
-	#Wolframalpha is much slower than google so it's not prefered
     url = "http://www.wolframalpha.com/input/?i=" +(query)
     webbrowser.open_new(url)
 
 def Parse_question(filename):
     text = Read_screen(filename)
-	
-	#Take the raw output from tesseract and make it more search friendly
     lines = text.splitlines()
     question = ""
     options = list()
@@ -142,11 +135,28 @@ if __name__ == '__main__':
     screenshot_file = "Screens/to_ocr.png"
     prompt = '> '
 
-    print("Select An Option:\n1-Loco    2-HQ Trivia    3-The Cash Show    4-Brain Bazzi    5-The Q    6-Qureka")
+    print("Select An Option:\n1-Loco    2-HQ Trivia    3-The Cash Show    4-Brain Bazzi    5-The Q    6-Quereka")
     op = int(input(prompt))
 
     print("Press s to Screenshot and q to quit")
     res = ''
+
+    text_file = open("Question_archive.txt","a")
+
+    if(op == 1):
+        text_file.write("Loco\n\n")
+    elif(op == 2):
+        text_file.write("HQ Trivia\n\n")
+    elif(op == 3):
+        text_file.write("The Cash Show\n\n")
+    elif(op == 4):
+        text_file.write("Brain Bazzi\n\n")
+    elif(op == 5):
+        text_file.write("The Q\n\n")
+    elif(op == 6):
+        text_file.write("Quereka\n\n")
+
+    cnt = 1
 
     while(res != 'q'):
         res = input(prompt)
@@ -181,19 +191,29 @@ if __name__ == '__main__':
                 question = Parse_question(inverted_loc)
 
             if(op == 6):
-                Screen_grab_Qureka(screenshot_file)
+                Screen_grab_Quereka(screenshot_file)
                 inverted_loc = Invert_ques_loco(screenshot_file)
 
                 question = Parse_question(inverted_loc)
 
+
+            
             print("Question : ")
             print(question)
+            text_file.write(str(cnt)+". ")
+            text_file.write(question)
+            text_file.write("\n")
+            cnt = cnt + 1
             print()
 
             Perform_search(question)
 
         elif(res == 'q'):
+            text_file.write("\n\n\n")
             break;
 
         else:
             print("Wrong option try again")
+
+    text_file.seek(0)
+    text_file.close()
