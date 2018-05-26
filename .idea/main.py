@@ -46,6 +46,34 @@ def Screen_grab_HQ_ques(to_save):
     im.save(to_save)
     return
 
+def Screen_grab_CashShow(to_save):
+
+    #Screen cap the left side of the desktop for The Cash Show
+    im = Imagegrab.grab(bbox=(28,203,346,284))
+    im.save(to_save)
+    return
+
+def Screen_grab_BrainBazzi(to_save):
+
+    #Screen cap the left side of the desktop for Brain Bazzi
+    im = Imagegrab.grab(bbox=(26,273,367,367))
+    im.save(to_save)
+    return
+
+def Screen_grab_TheQ(to_save):
+
+    #Screen cap the left side of the desktop for The Q
+    im = Imagegrab.grab(bbox=(11,440,379,534))
+    im.save(to_save)
+    return
+
+def Screen_grab_Qureka(to_save):
+
+    #Screen cap the left side of the desktop for Quereka
+    im = Imagegrab.grab(bbox=(47,284,346,355))
+    im.save(to_save)
+    return
+
 def Read_screen(filename):
 
     #Convert the screen cap to grayscale so that OCR performamce is better
@@ -114,7 +142,7 @@ if __name__ == '__main__':
     screenshot_file = "Screens/to_ocr.png"
     prompt = '> '
 
-    print("Select An Option:\n1-Loco    2-HQ Trivia")
+    print("Select An Option:\n1-Loco    2-HQ Trivia    3-The Cash Show    4-Brain Bazzi    5-The Q    6-Qureka")
     op = int(input(prompt))
 
     print("Press s to Screenshot and q to quit")
@@ -135,6 +163,28 @@ if __name__ == '__main__':
                 Screen_grab_HQ_ques(screenshot_file)
 
                 question = Parse_question(screenshot_file)
+
+            if(op == 3):
+                Screen_grab_CashShow(screenshot_file)
+
+                question = Parse_question(screenshot_file)
+
+            if(op == 4):
+                Screen_grab_BrainBazzi(screenshot_file)
+
+                question = Parse_question(screenshot_file)
+
+            if(op == 5):
+                Screen_grab_TheQ(screenshot_file)
+                inverted_loc = Invert_ques_loco(screenshot_file)
+
+                question = Parse_question(inverted_loc)
+
+            if(op == 6):
+                Screen_grab_Qureka(screenshot_file)
+                inverted_loc = Invert_ques_loco(screenshot_file)
+
+                question = Parse_question(inverted_loc)
 
             print("Question : ")
             print(question)
