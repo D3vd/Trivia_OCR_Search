@@ -8,6 +8,26 @@ import os
 import webbrowser
 
 
+remove_words = ["who","what","where","when","of","and","that","have","for","the","why","the","on","with","as","this","by","from","they","a","an",
+    "and","my","are","in","to","these","is","does","which","his","her","also","have","it","not","we","means","you","comes","came","come",
+    "about","if","by","from","go","?",",","!","'","has","\""]
+negative_words= ["not","isn\"t","except","don\"t","doesn\"t","wasn\"t","wouldn\"t","can\"t"]
+
+def simplify_ques(question):
+    neg = False
+    qwords = question.lower().split()
+    if [i for i in qwords if i in negative_words]:
+        neg = True
+    cleanwords = [word for word in qwords if word.lower() not in remove_words]
+    temp = ' '.join(cleanwords)
+    clean_question=""
+    for ch in temp: 
+        if ch!="?" or ch!="\"" or ch!="\'":
+            clean_question=clean_question+ch
+
+    return clean_question.lower(),neg
+
+
 def Screen_grab_loco(to_save):
 
     #Screen cap the left side of the desktop for loco
@@ -169,28 +189,28 @@ if __name__ == '__main__':
 
                 question = Parse_question(inverted_loc)
 
-            if(op == 2):
+            elif(op == 2):
                 Screen_grab_HQ_ques(screenshot_file)
 
                 question = Parse_question(screenshot_file)
 
-            if(op == 3):
+            elif(op == 3):
                 Screen_grab_CashShow(screenshot_file)
 
                 question = Parse_question(screenshot_file)
 
-            if(op == 4):
+            elif(op == 4):
                 Screen_grab_BrainBazzi(screenshot_file)
 
                 question = Parse_question(screenshot_file)
 
-            if(op == 5):
+            elif(op == 5):
                 Screen_grab_TheQ(screenshot_file)
                 inverted_loc = Invert_ques_loco(screenshot_file)
 
                 question = Parse_question(inverted_loc)
 
-            if(op == 6):
+            elif(op == 6):
                 Screen_grab_Quereka(screenshot_file)
                 inverted_loc = Invert_ques_loco(screenshot_file)
 
@@ -200,13 +220,18 @@ if __name__ == '__main__':
             
             print("Question : ")
             print(question)
+            simp_ques, neg = simplify_ques(question)
             text_file.write(str(cnt)+". ")
             text_file.write(question)
             text_file.write("\n")
             cnt = cnt + 1
+
+            if neg:
+                print("-- Question is NEGATIVE!")
+
             print()
 
-            Perform_search(question)
+            Perform_search(simp_ques)
 
         elif(res == 'q'):
             text_file.write("\n\n\n")
