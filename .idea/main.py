@@ -7,6 +7,24 @@ import argparse
 import os
 import webbrowser
 
+remove_words = ["who","what","where","when","of","and","that","have","for","the","why","the","on","with","as","this","by","from","they","a","an",
+                "and","my","are","in","to","these","is","does","which","his","her","also","have","it","not","we","means","you","comes","came","come",
+                "about","if","by","from","go","?",",","!","'","has","\""]
+negative_words= ["not","isn\"t","except","don\"t","doesn\"t","wasn\"t","wouldn\"t","can\"t","least"]
+
+def simplify_ques(question):
+    neg=False
+    qwords = question.lower().split()
+    if [i for i in qwords if i in negative_words]:
+        neg=True
+    cleanwords = [word for word in qwords if word.lower() not in remove_words]
+    temp = ' '.join(cleanwords)
+    clean_question=""
+    for ch in temp:
+        if ch!="?" or ch!="\"" or ch!="\'":
+            clean_question=clean_question+ch
+
+    return clean_question.lower(),neg
 
 def Screen_grab_loco(to_save):
 
@@ -188,9 +206,14 @@ if __name__ == '__main__':
 
             print("Question : ")
             print(question)
+            simp_ques, neg = simplify_ques(question)
+
+            if neg:
+                print("-- Question is NEGATIVE!")
+
             print()
 
-            Perform_search(question)
+            Perform_search(simp_ques)
 
         elif(res == 'q'):
             break;
